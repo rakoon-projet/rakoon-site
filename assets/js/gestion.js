@@ -10,7 +10,7 @@ onload = function () {
     var onplaying = false;
     var onpause = false;
     //var mediaSource = "http://video.webmfiles.org/big-buck-bunny_trailer.webm";
-    var mediaSource = "assets/video/Test.mp4";
+    var mediaSource = "assets/video/landscape.mp4";
     var videoContainer; // object to hold video and associated info
     var video = document.createElement("video"); // create a video element
     video.src = mediaSource;
