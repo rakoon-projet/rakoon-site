@@ -8,6 +8,7 @@ html, body {
 
 body {
     background-color: #1B2945;
+    cursor: none;
 }
 
 svg {
@@ -20,6 +21,24 @@ svg {
 
 .isActive {
     display: block;
+}
+
+#mouse {
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #fff;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    position: absolute;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    font-family: "Impact", sans-serif;
+    text-align: center;
+    line-height: 100px;
+    font-size: 30px;
 }
 
 

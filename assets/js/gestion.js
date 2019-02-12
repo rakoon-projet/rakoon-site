@@ -1,3 +1,5 @@
+
+
 onload = function () {
 
     /* VARIABLES */
@@ -70,6 +72,7 @@ onload = function () {
 
 
     // Éléments externes au container
+    var mouse = document.getElementById("mouse");
     var playButton = document.getElementById("playButton"); // Bouton PLAY
 
 
@@ -97,7 +100,7 @@ onload = function () {
     function initVideo() {
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
-            
+
             fscene1plan1(); // Joue le premier élément interactif
             playVid(); // Joue la vidéo "fixe"
 
@@ -117,7 +120,7 @@ onload = function () {
                 console.log(video.currentTime);
                 //scene1plan1.classList.remove("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
                 //scene1plan2.classList.add("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
-                
+
                 fscene1plan2();
 
                 setTimeout(function() { // Au bout de 15 secondes...
@@ -164,13 +167,15 @@ onload = function () {
                 });
 
                 TweenMax.to(scene1plan1fond1et2, 7, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
+                
+                mouse.innerHTML = "MOVE";
             }
 
             /*** SCÈNE 1 - PLAN 2 - ANIMATION BONHOMME FALAISE ***/
             function fscene1plan2() {
                 noInteraction();
             }
-            
+
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
             function fscene2plan1() {
 
@@ -202,8 +207,10 @@ onload = function () {
                     var tlCombiJump = new TimelineLite();
                     tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 300, ease: Back.easeIn});
                 });
+                
+                mouse.innerHTML = "HOVER";
             }
-            
+
             // Apparition du container
             TweenMax.to(container, 3, {opacity: 1, ease:Linear.easeNone});
 
@@ -269,6 +276,12 @@ onload = function () {
         video.setAttribute("height", container.offsetHeight);
         cnv.width = video.width;
         cnv.height = video.height;
+    };
+
+    // Gestion de la souris
+    window.onmousemove = function(e) {
+        mouse.style.top = e.pageY + "px";
+        mouse.style.left = e.pageX + "px";
     };
 };
 
