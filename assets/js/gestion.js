@@ -5,6 +5,7 @@ onload = function () {
     var ctx = cnv.getContext("2d");
 
     var container = document.getElementById("container");
+    var interactiveContainer = document.getElementById("interactive-container");
 
     // Vidéo
     var siVideo;
@@ -12,14 +13,25 @@ onload = function () {
     var onplaying = false;
     var onpause = false;
 
-    var mediaSource = "assets/video/landscape.mp4";
+    var mediaSource = "assets/video/ours-1.mp4";
     var videoContainer;
     var video = document.createElement("video");
 
     // Temps
     var tempsFinal = 144000,
-        tempsApparitionScene1Plan2 = 8000,
-        tempsApparitionScene2Plan1 = 15000;
+        tempsApparitionScene1Plan2 = 7500, // Paysage Zoom visage
+        tempsApparitionScene2Plan1 = 15000, // Van ville
+        tempsApparitionScene3Plan1 = 31000, // Chambre Famille
+        tempsApparitionScene4Plan1 = 38000, // Van neige
+        tempsApparitionScene5Plan1 = 47000, // Jungle
+        tempsApparitionScene6Plan1 = 61200, // Van montagnes
+        tempsApparitionScene7Plan1 = 70200, // Psyché emporté
+        tempsApparitionScene7Plan2 = 72000, // Psyché vortex
+        tempsApparitionScene8Plan1 = 79800, // Plage
+        tempsApparitionScene9Plan1 = 88800, // Van désert
+        tempsApparitionScene10Plan1 = 122400, // Concert plan loin
+        tempsApparitionScene10Plan2 = 131400, // Concert plan rapproché
+        tempsApparitionScene11Plan1 = 139800; // Paysage final
 
     /* Scènes et plans */
     var scenes = document.querySelector(".scene");
@@ -38,6 +50,7 @@ onload = function () {
     var svgFalaise = document.getElementById("svg-falaise"),
         scene1plan1fond1 = document.getElementById("Scene1Plan1Fond1"),
         scene1plan1fond2 = document.getElementById("Scene1Plan1Fond2"),
+        scene1plan1fond1et2 = document.getElementById("Scene1Plan1Fond1et2"),
         scene1plan1fond3 = document.getElementById("Scene1Plan1Fond3"),
         scene1plan1nuagesarriere1 = document.getElementById("Scene1Plan1NuagesArriere1"),
         scene1plan1nuagesarriere2 = document.getElementById("Scene1Plan1NuagesArriere2"),
@@ -63,7 +76,7 @@ onload = function () {
     // Attributs de la vidéo
     video.src = mediaSource;
     video.autoPlay = false;
-    video.loop = true;
+    video.loop = false;
     video.muted = false;
     video.setAttribute("width", container.offsetWidth);
     video.setAttribute("height", container.offsetHeight);
@@ -84,8 +97,9 @@ onload = function () {
     function initVideo() {
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
-            playVid(); // Joue la vidéo "fixe"
+            
             fscene1plan1(); // Joue le premier élément interactif
+            playVid(); // Joue la vidéo "fixe"
 
             // Dessin de la vidéo à l'intérieur du canvas
             siVideo = setInterval(function () {
@@ -134,8 +148,8 @@ onload = function () {
                     left = cnv.width / 2 - pos_x;
                     top  = cnv.height / 2 - pos_y;
 
-                    TweenMax.to(scene1plan1fond1, 2, { css: { transform: 'translateX(' + left / 6 + 'px) translateY(' + top / 6 + 'px) scale(1.1)' }, ease: Power2.easeOut, overwrite: 'none' });
-                    TweenMax.to(scene1plan1fond2, 2, { css: { transform: 'translateX(' + left / 20 + 'px) translateY(' + top / 20 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                    TweenMax.to(scene1plan1fond1, 2, { css: { transform: 'translateX(' + left / 17 + 'px) translateY(' + top / 17 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                    TweenMax.to(scene1plan1fond2, 2, { css: { transform: 'translateX(' + left / 30 + 'px) translateY(' + top / 30 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
 
                     TweenMax.to(scene1plan1nuagesavant5, 2, { css: { transform: 'translateX(' + left / 6 + 'px) translateY(' + top / 6 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
                     TweenMax.to(scene1plan1nuagesavant1, 2, { css: { transform: 'translateX(' + left / 6 + 'px) translateY(' + top / 6 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
@@ -149,7 +163,7 @@ onload = function () {
                     TweenMax.to(scene1plan1nuagesarriere1, 2, { css: { transform: 'translateX(' + left / 60 + 'px) translateY(' + top / 60 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
                 });
 
-                TweenMax.to(svgFalaise, 7, { css: { transform: 'scale(1.2)' }, ease: Linear.easeOut });
+                TweenMax.to(scene1plan1fond1et2, 7, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
             }
 
             /*** SCÈNE 1 - PLAN 2 - ANIMATION BONHOMME FALAISE ***/
@@ -189,6 +203,9 @@ onload = function () {
                     tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 300, ease: Back.easeIn});
                 });
             }
+            
+            // Apparition du container
+            TweenMax.to(container, 3, {opacity: 1, ease:Linear.easeNone});
 
             // Disparition du bouton PLAY
             TweenMax.to(playButton, 1, {opacity: 0, onComplete: function() {
@@ -207,6 +224,7 @@ onload = function () {
 
     // Lorsque la vidéo est prête à être lancée et à terminer jusqu'à la fin...
     videoContainer.video.oncanplaythrough = function() {
+        console.log("video prete");
         videoContainer.ready = true;
     };
 

@@ -1,15 +1,28 @@
-var gulp = require('gulp'),
-    useref = require('gulp-useref'),
-    livereload = require('gulp-livereload');
+const { src, dest, parallel } = require('gulp'),
+      useref = require('gulp-useref'),
+      gulpif = require('gulp-if'),
+      uglify = require('gulp-uglify'),
+      minifyCss = require('gulp-clean-css'),
+      livereload = require('gulp-livereload');
 
-gulp.task('default', function() {
-    return gulp.src('*.html')
+function minify() {
+    return src('*.html')
         .pipe(useref())
-        .pipe(gulp.dest('dist'));
-})
+        .pipe(gulpif('*.js', uglify()))
+        .pipe(gulpif('*.css', minifyCss()))
+        .pipe(dest('dist'));
+}
+
+function video() {
+    return src('assets/video/*').pipe(dest('dist/assets/video'));
+}
 
 /*gulp.task('watch', function() {
     livereload.listen();
     gulp.watch(['*.html', 'assets/js/*.js', 'assets/css/*.css']);
     livereload();
 })*/
+
+
+exports.video = video;
+exports.default = parallel(minify, video);

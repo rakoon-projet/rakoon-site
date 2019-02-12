@@ -27,6 +27,7 @@ svg {
 
 #container {
     position: relative;
+    opacity: 0;
     width: 100%;
     overflow: hidden;
     top: 50%;
@@ -85,9 +86,11 @@ svg {
     position: absolute;
     z-index: 999;
     left: 50%;
-    top: 90%;
+    top: 50%;
     transform: translate(-50%,-50%);
-    padding: 3%;
-    border-radius: 20%;
-    font-size: 20px;
+    padding: 5% 10%;
+    border-radius: 30px;
+    font-size: 30px;
+    letter-spacing: 20px;
+    font-weight: 100;
 }
