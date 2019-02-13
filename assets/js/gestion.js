@@ -46,7 +46,7 @@ onload = function () {
     // Plans
     var scene1plan1 = document.querySelector("#scene1 #plan1"), // Falaises
         scene1plan2 = document.querySelector("#scene1 #plan2"), // Bonhomme qui réfléchit
-        scene2plan1 = document.querySelector("#scene2 #plan1"); // Combi 1
+        scene2plan1 = document.querySelector("#scene2 #plan1"); // Combi
 
     // Falaise
     var svgFalaise = document.getElementById("svg-falaise"),
@@ -112,7 +112,7 @@ onload = function () {
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
 
-            currentInteraction = "move";
+            currentInteraction = "MOVE";
 
             fscene1plan1(); // Joue le premier élément interactif
             playVid(); // Joue la vidéo "fixe"
@@ -130,9 +130,11 @@ onload = function () {
             scene1plan1.classList.add("isActive");
 
             setTimeout(function() { // Lorsque le paysage est terminé...
-                console.log(video.currentTime);
+                console.log(parseInt(video.currentTime*1000));
                 scene1plan1.classList.remove("isActive");
                 scene1plan2.classList.add("isActive");
+                
+                currentInteraction = "CLEAR";
 
                 fscene1plan2();
 
@@ -144,16 +146,26 @@ onload = function () {
                     scene2.classList.add("isActive");
                     scene2plan1.classList.add("isActive");
 
-                    currentInteraction = "hover";
+                    currentInteraction = "HOVER";
 
-                    fscene2plan1();
+                    fsceneCombi(0, 130, 12.7);
 
                     setTimeout(function() { // Lorsque le plan van ville est terminé...
                         console.log(video.currentTime);
                         noInteraction();
                         currentInteraction = "";
 
-                    }, 15500);
+                        setTimeout(function() { // Lorsque le plan chambre famille est terminé...
+                            console.log(video.currentTime);
+                            scene2.classList.add("isActive");
+                            scene2plan1.classList.add("isActive");
+
+                            currentInteraction = "CLIC";
+
+                            fsceneCombi(1, 0, 5.5);
+
+                        }, 8000);
+                    }, 15000);
                 }, 8000);
             }, 7500);
 
@@ -197,65 +209,51 @@ onload = function () {
             function fscene1plan2() {
                 // Au survol pour le parallax...
                 container.addEventListener("mouseover", function(e) {
-                    var pos_x = e.pageX,
+                    /*var pos_x = e.pageX,
                         pos_y = e.pageY,
                         left  = 0,
                         top   = 0;
 
                     left = cnv.width / 2 - pos_x;
-                    top  = cnv.height / 2 - pos_y;
+                    top  = cnv.height / 2 - pos_y;*/
 
-                    TweenMax.to(scene1plan2nuagesavant, 1, { css: { transform: 'translateX(' + left / 10 + 'px) translateY(' + top / 10 + 'px)' }, ease: Power2.easeOut });
-                    TweenMax.to(scene1plan2nuagesarriere, 1, { css: { transform: 'translateX(' + left / 20 + 'px) translateY(' + top / 20 + 'px)' }, ease: Power2.easeOut });
+                    //TweenMax.to(scene1plan2nuagesavant, 1, { css: { transform: 'translateX(' + left / 10 + 'px) translateY(' + top / 10 + 'px)' }, ease: Power2.easeOut });
+                    //TweenMax.to(scene1plan2nuagesarriere, 1, { css: { transform: 'translateX(' + left / 20 + 'px) translateY(' + top / 20 + 'px)' }, ease: Power2.easeOut });
+                    
+                    //scene1plan2nuagesavant3.style.x += 40;
+                    
+                    console.log(e.target.x);
+                    
+                    /*TweenMax.to(scene1plan2nuagesavant3, 1, { x: "+=" + 40, y: "+=" + 40, ease: Linear.easeOut });
+                    TweenMax.to(scene1plan2nuagesavant2, 1, { x: "-=" + 60, y: "-=" + 60, ease: Linear.easeOut });
+                    TweenMax.to(scene1plan2nuagesavant1, 1, { x: "-=" + 60, y: "+=" + 100, ease: Linear.easeOut });
+
+                    TweenMax.to(scene1plan2nuagesarriere2, 1, { x: "+=" + 40, y: "-=" + 40, ease: Linear.easeOut });
+                    TweenMax.to(scene1plan2nuagesarriere1, 1, { x: "-= "+ 40, ease: Linear.easeOut });*/
+                    
+                    mouseInteraction(currentInteraction);
                 });
 
-                setTimeout(function() {
+                /*setTimeout(function() {
                     TweenMax.to(scene1plan2nuagesavant3, 4, { x: cnv.width+200, y: cnv.height+200, ease: Power4.easeIn });
                     TweenMax.to(scene1plan2nuagesavant2, 4, { x: -400, y: -400, ease: Power4.easeIn });
                     TweenMax.to(scene1plan2nuagesavant1, 4, { x: -800, y: cnv.height+100, ease: Power4.easeIn });
-                    
+
                     TweenMax.to(scene1plan2nuagesarriere2, 4, { x: cnv.width, y: -100, ease: Power4.easeIn });
                     TweenMax.to(scene1plan2nuagesarriere1, 4, { x: -700, ease: Power4.easeIn });
-                }, 3000);
+                }, 3000);*/
             }
 
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
-            function fscene2plan1() {
-
-                // Animation du combi
-                var tlAvanceCombi = new TimelineLite();
-                tlAvanceCombi.set(combi, {x: -1500, y: 130})
-                .to(combi, 2, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}) // Déplacement en x
-                .to(combi, 12.7, {x: 900, transformOrigin: "50% 50%", ease: Linear.easeNone}, "-=1")
-                .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn})
-                TweenMax.to(roueArriere, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
-                TweenMax.to(roueAvant, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
-
-                var randomRebondCombi = Math.random() * (30-10) + 10;
-                var tlRebondCombi = new TimelineMax({repeat: -1});
-
-                tlRebondCombi.to(carrosserie, 0.2, {y: "+=" + randomRebondCombi + "px", ease: Linear.easeNone})
-                    .to(carrosserie, 0.2, {y: "-=" + randomRebondCombi + "10px", ease: Linear.easeNone});
-
-                // Au survol du combi...
-                combi.addEventListener("mouseover", function(e) {
-                    if (e.target.classList.contains("blueGradient")) {
-                        e.target.classList = "";
-                        e.target.classList.add("st44");
-                    } else {
-                        e.target.classList = "";
-                        e.target.classList.add("st45");
-                        e.target.classList.add("blueGradient");
-                    }
-                });
-
-                // Au clic sur le container lorsque le combi est présent...
-                container.addEventListener("click", function() {
-                    var tlCombiJump = new TimelineLite();
-                    tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 130, ease: Back.easeIn});
-                });
-
+            function fsceneCombi(typeInteraction, position, vitesse) {
+                combiAnim(position, vitesse);
+                combiHover();
                 mouseInteraction(currentInteraction);
+
+                switch(typeInteraction) {
+                    case 1 :
+                        combiClic(position);
+                }
             }
 
 
@@ -287,15 +285,12 @@ onload = function () {
 
     // Est appelée lorsqu'on arrive à un moment de la vidéo où il n'y a pas d'interaction
     function noInteraction() {
-        //scenes.forEach(e => e.parentNode.removeChild(e));
-        //plans.forEach(e => e.parentNode.removeChild(e));
-
         scenes.forEach(function(element) {
-            element.parentNode.removeChild(element);
+            element.parentNode.classList.remove("isActive");
         });
 
         plans.forEach(function(element) {
-            element.parentNode.removeChild(element);
+            element.parentNode.classList.remove("isActive");
         });
 
         noMouseInteraction();
@@ -311,17 +306,49 @@ onload = function () {
     function mouseInteraction(s) {
         mouse.classList.remove("differenceMode");
         TweenMax.to(mouse, 0.2, {width: 100, height: 100, ease: Power1.easeOut});
-        switch(s) {
-            case "hover":
-                //mouse.innerHTML = "HOVER</br><span style='font-size: 12px; line-height: 12px'>THE COMBI</span>";
-                mouse.innerHTML = "HOVER";
-                break;
-            case "move":
-                mouse.innerHTML = "MOVE";
-                break;
-            case "":
-                noMouseInteraction();
-        }
+
+        if (s != "") mouse.innerHTML = s;
+        else noMouseInteraction();
+    }
+
+    function combiAnim(position, vitesse) {
+        // Animation du combi
+        var tlAvanceCombi = new TimelineLite();
+        tlAvanceCombi.set(combi, {x: -1500, y: position})
+            .to(combi, 2, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}) // Déplacement en x
+            .to(combi, vitesse, {x: 900, transformOrigin: "50% 50%", ease: Linear.easeNone}, "-=1")
+            .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn})
+        TweenMax.to(roueArriere, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
+        TweenMax.to(roueAvant, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
+
+        var randomRebondCombi = Math.random() * (30-10) + 10;
+        var tlRebondCombi = new TimelineMax({repeat: -1});
+
+        tlRebondCombi.to(carrosserie, 0.2, {y: "+=" + randomRebondCombi + "px", ease: Linear.easeNone})
+            .to(carrosserie, 0.2, {y: "-=" + randomRebondCombi + "10px", ease: Linear.easeNone});
+
+    }
+
+    function combiHover() {
+        // Au survol du combi...
+        combi.addEventListener("mouseover", function(e) {
+            if (e.target.classList.contains("blueGradient")) {
+                e.target.classList = "";
+                e.target.classList.add("st44");
+            } else {
+                e.target.classList = "";
+                e.target.classList.add("st45");
+                e.target.classList.add("blueGradient");
+            }
+        });
+    }
+
+    function combiClic(position) {
+        // Au clic sur le container lorsque le combi est présent...
+        container.addEventListener("click", function() {
+            var tlCombiJump = new TimelineLite();
+            tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: position, ease: Back.easeIn});
+        });
     }
 
 
