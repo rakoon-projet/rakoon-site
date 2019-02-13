@@ -23,10 +23,12 @@ svg {
     display: block;
 }
 
+/* Mouse */
+
 #mouse {
     display: block;
-    width: 100px;
-    height: 100px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background-color: #fff;
     -webkit-transform: translate(-50%, -50%);
@@ -34,11 +36,30 @@ svg {
     pointer-events: none;
     position: absolute;
     z-index: 9999;
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
     font-family: "Impact", sans-serif;
     text-align: center;
     line-height: 100px;
     font-size: 30px;
+    color: #000;
+    letter-spacing: 3px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.differenceMode {
+    mix-blend-mode: difference!important;
+}
+
+button:hover, a:hover {
+    cursor: none;
 }
 
 
@@ -51,6 +72,7 @@ svg {
     overflow: hidden;
     top: 50%;
     padding-top: 56.25%;
+    -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
 }
 
@@ -83,6 +105,7 @@ svg {
 /* FALAISE */
 
 #svg-falaise {
+    -webkit-transform: scale(1.15);
     transform: scale(1.15);
 }
 
@@ -106,6 +129,7 @@ svg {
     z-index: 999;
     left: 50%;
     top: 50%;
+    -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
     padding: 5% 10%;
     border-radius: 30px;

@@ -1,5 +1,3 @@
-
-
 onload = function () {
 
     /* VARIABLES */
@@ -8,6 +6,8 @@ onload = function () {
 
     var container = document.getElementById("container");
     var interactiveContainer = document.getElementById("interactive-container");
+
+    var currentInteraction;
 
     // Vidéo
     var siVideo;
@@ -36,8 +36,8 @@ onload = function () {
         tempsApparitionScene11Plan1 = 139800; // Paysage final
 
     /* Scènes et plans */
-    var scenes = document.querySelector(".scene");
-    var plans = document.querySelector(".plan");
+    var scenes = document.querySelectorAll(".scene");
+    var plans = document.querySelectorAll(".plan");
 
     // Scènes
     var scene1 = document.getElementById("scene1"),
@@ -92,6 +92,7 @@ onload = function () {
     cnv.width = video.width;
     cnv.height = video.height;
 
+    noMouseInteraction();
 
     // Au clic sur le bouton PLAY...
     playButton.addEventListener("click", initVideo);
@@ -100,6 +101,8 @@ onload = function () {
     function initVideo() {
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
+
+            currentInteraction = "move";
 
             fscene1plan1(); // Joue le premier élément interactif
             playVid(); // Joue la vidéo "fixe"
@@ -116,14 +119,15 @@ onload = function () {
             scene1.classList.add("isActive");
             scene1plan1.classList.add("isActive");
 
-            setTimeout(function() { // Au bout de 8 secondes...
+            setTimeout(function() { // Lorsque le paysage est terminé...
                 console.log(video.currentTime);
-                //scene1plan1.classList.remove("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
-                //scene1plan2.classList.add("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
+                scene1plan1.classList.remove("isActive"); //A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
+                //scene1plan2.classList.add("isActive"); //A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
 
+                //currentInteraction = "move";
                 fscene1plan2();
 
-                setTimeout(function() { // Au bout de 15 secondes...
+                setTimeout(function() { // Lorsque le plan rapproché visage est terminé...
                     console.log(video.currentTime);
                     scene1.classList.remove("isActive");
                     //scene1plan2.classList.remove("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
@@ -131,9 +135,18 @@ onload = function () {
                     scene2.classList.add("isActive");
                     scene2plan1.classList.add("isActive");
 
+                    currentInteraction = "hover";
+
                     fscene2plan1();
-                }, tempsApparitionScene2Plan1 - tempsApparitionScene1Plan2); // Au bout de 15 secondes...
-            }, tempsApparitionScene1Plan2); // Au bout de 8 secondes...
+
+                    setTimeout(function() { // Lorsque le plan van ville est terminé...
+                        console.log(video.currentTime);
+                        noInteraction();
+                        currentInteraction = "";
+
+                    }, 16000);
+                }, 7500);
+            }, 7500);
 
             /********************************************************************************************/
             /**************************************** ANIMATIONS ****************************************/
@@ -167,13 +180,13 @@ onload = function () {
                 });
 
                 TweenMax.to(scene1plan1fond1et2, 7, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
-                
-                mouse.innerHTML = "MOVE";
+
+                mouseInteraction(currentInteraction);
             }
 
             /*** SCÈNE 1 - PLAN 2 - ANIMATION BONHOMME FALAISE ***/
             function fscene1plan2() {
-                noInteraction();
+
             }
 
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
@@ -207,25 +220,66 @@ onload = function () {
                     var tlCombiJump = new TimelineLite();
                     tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 300, ease: Back.easeIn});
                 });
-                
-                mouse.innerHTML = "HOVER";
+
+                mouseInteraction(currentInteraction);
             }
 
+
+
+            /********************************************************************************************/
+            /****************************************** AUTRES ******************************************/
+            /********************************************************************************************/
+
             // Apparition du container
-            TweenMax.to(container, 3, {opacity: 1, ease:Linear.easeNone});
+            TweenMax.to(container, 3, {opacity: 1, ease: Linear.easeNone});
 
             // Disparition du bouton PLAY
             TweenMax.to(playButton, 1, {opacity: 0, onComplete: function() {
                 playButton.style.display = "none";
                 playButton.style.visibility = "hidden";
             }});
+
+            // Dès que la souris sort de la zone vidéo...
+            interactiveContainer.addEventListener("mouseleave", function(e) {   
+                noMouseInteraction();
+            });
+
+            // Dès que la souris revient dans la zone vidéo...
+            interactiveContainer.addEventListener("mouseenter", function(e) {   
+                mouseInteraction(currentInteraction);
+            });
         }
     }
 
-    // Est appelé lorsqu'on arrive à un moment de la vidéo où il n'y a pas d'interaction
+    // Est appelée lorsqu'on arrive à un moment de la vidéo où il n'y a pas d'interaction
     function noInteraction() {
-        scenes.classList.remove("isActive");
-        plans.classList.remove("isActive");
+        scenes.forEach(e => e.parentNode.removeChild(e));
+        plans.forEach(e => e.parentNode.removeChild(e));
+
+        noMouseInteraction();
+    }
+
+    function noMouseInteraction() {
+        mouse.innerHTML = "";
+        mouse.classList.add("differenceMode");
+        TweenMax.to(mouse, 0.2, {width: 10, height: 10, ease: Power1.easeOut});
+    }
+
+    // Est appelée lorsqu'il y a une interaction
+    function mouseInteraction(s) {
+        mouse.classList.remove("differenceMode");
+        TweenMax.to(mouse, 0.2, {width: 100, height: 100, ease: Power1.easeOut});
+        switch(s) {
+            case "hover":
+                //mouse.innerHTML = "HOVER</br><span style='font-size: 12px; line-height: 12px'>THE COMBI</span>";
+                mouse.innerHTML = "HOVER";
+                break;
+            case "move":
+                mouse.innerHTML = "MOVE";
+                break;
+            case "":
+                noMouseInteraction();
+        }
     }
 
 
