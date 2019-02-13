@@ -1,4 +1,4 @@
-const { src, dest, parallel } = require('gulp'),
+const { src, dest, series } = require('gulp'),
       useref = require('gulp-useref'),
       gulpif = require('gulp-if'),
       uglify = require('gulp-uglify'),
@@ -24,5 +24,5 @@ function video() {
 })*/
 
 
-exports.video = video;
-exports.default = parallel(minify, video);
+//exports.video = video;
+exports.default = series(minify, video);

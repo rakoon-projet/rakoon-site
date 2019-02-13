@@ -64,6 +64,16 @@ onload = function () {
         scene1plan1nuagesavant5 = document.getElementById("Scene1Plan1NuagesAvant5"),
         scene1plan1nuagesavant6 = document.getElementById("Scene1Plan1NuagesAvant6");
 
+    // Visage
+    var svgVisage = document.getElementById("svg-visage"),
+        scene1plan2nuagesarriere = document.getElementById("Scene1Plan2NuagesArriere"),
+        scene1plan2nuagesarriere1 = document.getElementById("Scene1Plan2NuagesArriere1"),
+        scene1plan2nuagesarriere2 = document.getElementById("Scene1Plan2NuagesArriere2"),
+        scene1plan2nuagesavant = document.getElementById("Scene1Plan2NuagesAvant"),
+        scene1plan2nuagesavant1 = document.getElementById("Scene1Plan2NuagesAvant1"),
+        scene1plan2nuagesavant2 = document.getElementById("Scene1Plan2NuagesAvant2"),
+        scene1plan2nuagesavant3 = document.getElementById("Scene1Plan2NuagesAvant3");
+
     // Combi
     var combi = document.querySelector('#Combi'),
         carrosserie = document.querySelector('#Carrosserie'),
@@ -121,16 +131,15 @@ onload = function () {
 
             setTimeout(function() { // Lorsque le paysage est terminé...
                 console.log(video.currentTime);
-                scene1plan1.classList.remove("isActive"); //A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
-                //scene1plan2.classList.add("isActive"); //A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
+                scene1plan1.classList.remove("isActive");
+                scene1plan2.classList.add("isActive");
 
-                //currentInteraction = "move";
                 fscene1plan2();
 
                 setTimeout(function() { // Lorsque le plan rapproché visage est terminé...
                     console.log(video.currentTime);
                     scene1.classList.remove("isActive");
-                    //scene1plan2.classList.remove("isActive"); A DECOMMANTER DES QUE SCENE 1 PLAN 2 EST PRETE
+                    scene1plan2.classList.remove("isActive");
 
                     scene2.classList.add("isActive");
                     scene2plan1.classList.add("isActive");
@@ -144,8 +153,8 @@ onload = function () {
                         noInteraction();
                         currentInteraction = "";
 
-                    }, 16000);
-                }, 7500);
+                    }, 15500);
+                }, 8000);
             }, 7500);
 
             /********************************************************************************************/
@@ -186,14 +195,39 @@ onload = function () {
 
             /*** SCÈNE 1 - PLAN 2 - ANIMATION BONHOMME FALAISE ***/
             function fscene1plan2() {
+                // Au survol pour le parallax...
+                container.addEventListener("mouseover", function(e) {
+                    var pos_x = e.pageX,
+                        pos_y = e.pageY,
+                        left  = 0,
+                        top   = 0;
 
+                    left = cnv.width / 2 - pos_x;
+                    top  = cnv.height / 2 - pos_y;
+
+                    TweenMax.to(scene1plan2nuagesavant, 1, { css: { transform: 'translateX(' + left / 10 + 'px) translateY(' + top / 10 + 'px)' }, ease: Power2.easeOut });
+                    TweenMax.to(scene1plan2nuagesarriere, 1, { css: { transform: 'translateX(' + left / 20 + 'px) translateY(' + top / 20 + 'px)' }, ease: Power2.easeOut });
+                });
+
+                setTimeout(function() {
+                    TweenMax.to(scene1plan2nuagesavant3, 4, { x: cnv.width+200, y: cnv.height+200, ease: Power4.easeIn });
+                    TweenMax.to(scene1plan2nuagesavant2, 4, { x: -400, y: -400, ease: Power4.easeIn });
+                    TweenMax.to(scene1plan2nuagesavant1, 4, { x: -800, y: cnv.height+100, ease: Power4.easeIn });
+                    
+                    TweenMax.to(scene1plan2nuagesarriere2, 4, { x: cnv.width, y: -100, ease: Power4.easeIn });
+                    TweenMax.to(scene1plan2nuagesarriere1, 4, { x: -700, ease: Power4.easeIn });
+                }, 3000);
             }
 
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
             function fscene2plan1() {
 
                 // Animation du combi
-                TweenMax.to(combi, 10, {x: "700px", transformOrigin: "50% 50%", repeat: -1, ease:Linear.easeNone}); // Déplacement en x
+                var tlAvanceCombi = new TimelineLite();
+                tlAvanceCombi.set(combi, {x: -1500, y: 130})
+                .to(combi, 2, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}) // Déplacement en x
+                .to(combi, 12.7, {x: 900, transformOrigin: "50% 50%", ease: Linear.easeNone}, "-=1")
+                .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn})
                 TweenMax.to(roueArriere, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
                 TweenMax.to(roueAvant, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
 
@@ -218,7 +252,7 @@ onload = function () {
                 // Au clic sur le container lorsque le combi est présent...
                 container.addEventListener("click", function() {
                     var tlCombiJump = new TimelineLite();
-                    tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 300, ease: Back.easeIn});
+                    tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 130, ease: Back.easeIn});
                 });
 
                 mouseInteraction(currentInteraction);
@@ -253,8 +287,16 @@ onload = function () {
 
     // Est appelée lorsqu'on arrive à un moment de la vidéo où il n'y a pas d'interaction
     function noInteraction() {
-        scenes.forEach(e => e.parentNode.removeChild(e));
-        plans.forEach(e => e.parentNode.removeChild(e));
+        //scenes.forEach(e => e.parentNode.removeChild(e));
+        //plans.forEach(e => e.parentNode.removeChild(e));
+
+        scenes.forEach(function(element) {
+            element.parentNode.removeChild(element);
+        });
+
+        plans.forEach(function(element) {
+            element.parentNode.removeChild(element);
+        });
 
         noMouseInteraction();
     }
