@@ -1,4 +1,28 @@
+/*document.onreadystatechange = function () {
+            if (document.readyState === "complete") {
+                console.log(document.readyState);
+                //document.getElementById("PreLoaderBar").style.display = "none";
+            }
+        }
+*/
+
+/*document.addEventListener('DOMContentLoaded', function(){ 
+    console.log("ready");
+}, false);*/
+
 onload = function () {
+    /* LOADER TERMINÉ */
+    setTimeout(function() {
+        TweenMax.to(document.getElementById("intro"), 0.7, {opacity: 0, onComplete: function() {
+            document.getElementById("intro").style.display = "none";
+            document.getElementById("video-wrapper").style.display = "block";
+            var tl = new TimelineMax();
+            tl.to(document.getElementById("video-wrapper"), 1, { opacity: 1, ease: Power4.easeIn })
+                .from(overlayTop, 2, { height: 0, ease: Power4.easeOut })
+                .from(overlayBottom, 2, { height: 0, ease: Power4.easeOut }, "-=2")
+                .from(document.querySelector("#overlayTop p"), 2, { opacity: 0, ease: Power4.easeOut }, "-=1.5");
+        }});
+    }, 2000);
 
     /* VARIABLES */
     var cnv = document.querySelector("canvas");
@@ -34,6 +58,26 @@ onload = function () {
         tempsApparitionScene10Plan1 = 122400, // Concert plan loin
         tempsApparitionScene10Plan2 = 131400, // Concert plan rapproché
         tempsApparitionScene11Plan1 = 139800; // Paysage final
+
+    /*
+
+    Plan falaise : 00:00.000//
+Plan pensif : 00:09.844//
+Plan ville : 00:15.441//
+Plan parent : 00:30.830//
+Plan neige : 00:38.560//
+Plan jungle : 00:46.480//
+Plan montagne : 01:01.920 = 61920//
+Plan pilule : 01:15.400 = 75400//
+Plan psyché : 01:17.170 = 77170//
+Plan plage : 01:32.766 = 92766//
+Plan désert : 01:48.400 = 108400//
+Plan concert : 02:03.680 = 123680//
+Plan DJ : 02:19.200 = 139200//
+Plan falaise : 02:32.799 = 152799
+
+
+    */
 
     /* Scènes et plans */
     var scenes = document.querySelectorAll(".scene");
@@ -72,7 +116,8 @@ onload = function () {
         scene1plan2nuagesavant = document.getElementById("Scene1Plan2NuagesAvant"),
         scene1plan2nuagesavant1 = document.getElementById("Scene1Plan2NuagesAvant1"),
         scene1plan2nuagesavant2 = document.getElementById("Scene1Plan2NuagesAvant2"),
-        scene1plan2nuagesavant3 = document.getElementById("Scene1Plan2NuagesAvant3");
+        scene1plan2nuagesavant3 = document.getElementById("Scene1Plan2NuagesAvant3"),
+        cpt = 0;
 
     // Combi
     var combi = document.querySelector('#Combi'),
@@ -84,6 +129,12 @@ onload = function () {
     // Éléments externes au container
     var mouse = document.getElementById("mouse");
     var playButton = document.getElementById("playButton"); // Bouton PLAY
+    var overlayTop = document.getElementById("overlayTop");
+    var overlayBottom = document.getElementById("overlayBottom");
+    var iconFullscreen = document.getElementById("iconFullscreen");
+    var fullscreen = false;
+    var rakoonTitre = document.querySelector("h1");
+    var trackTitre = document.querySelector("h2");
 
 
     // Attributs de la vidéo
@@ -130,16 +181,16 @@ onload = function () {
             scene1plan1.classList.add("isActive");
 
             setTimeout(function() { // Lorsque le paysage est terminé...
-                console.log(parseInt(video.currentTime*1000));
+                console.log("visage");
                 scene1plan1.classList.remove("isActive");
                 scene1plan2.classList.add("isActive");
-                
+
                 currentInteraction = "CLEAR";
 
                 fscene1plan2();
 
                 setTimeout(function() { // Lorsque le plan rapproché visage est terminé...
-                    console.log(video.currentTime);
+                    console.log("van ville");
                     scene1.classList.remove("isActive");
                     scene1plan2.classList.remove("isActive");
 
@@ -151,12 +202,13 @@ onload = function () {
                     fsceneCombi(0, 130, 12.7);
 
                     setTimeout(function() { // Lorsque le plan van ville est terminé...
-                        console.log(video.currentTime);
+                        console.log("chambre famille");
                         noInteraction();
+                        scene2plan1.classList.remove("isActive");
                         currentInteraction = "";
 
                         setTimeout(function() { // Lorsque le plan chambre famille est terminé...
-                            console.log(video.currentTime);
+                            console.log("van neige");
                             scene2.classList.add("isActive");
                             scene2plan1.classList.add("isActive");
 
@@ -164,10 +216,64 @@ onload = function () {
 
                             fsceneCombi(1, 0, 5.5);
 
-                        }, 8000);
-                    }, 15000);
-                }, 8000);
-            }, 7500);
+                            setTimeout(function() { // Lorsque le plan van neige est terminé...
+                                console.log("jungle");
+                                noInteraction();
+                                scene2plan1.classList.remove("isActive");
+                                currentInteraction = "";
+
+                                setTimeout(function() { // Lorsque le plan jungle est terminé...
+                                    console.log("van montagnes");
+                                    noInteraction();
+                                    currentInteraction = "";
+
+                                    setTimeout(function() { // Lorsque le plan van montagnes est terminé...
+                                        console.log("pilule");
+                                        noInteraction();
+                                        currentInteraction = "";
+
+                                        setTimeout(function() { // Lorsque le plan pilule est terminé...
+                                            console.log("psyché");
+                                            noInteraction();
+                                            currentInteraction = "";
+
+                                            setTimeout(function() { // Lorsque le plan psyché est terminé...
+                                                console.log("plage");
+                                                noInteraction();
+                                                currentInteraction = "";
+
+                                                setTimeout(function() { // Lorsque le plan plage est terminé...
+                                                    console.log("van désert");
+                                                    noInteraction();
+                                                    currentInteraction = "";
+
+                                                    setTimeout(function() { // Lorsque le plan van désert est terminé...
+                                                        console.log("concert loin");
+                                                        noInteraction();
+                                                        currentInteraction = "";
+
+                                                        setTimeout(function() { // Lorsque le plan concert loin est terminé...
+                                                            console.log("DJ");
+                                                            noInteraction();
+                                                            currentInteraction = "";
+
+                                                            setTimeout(function() { // Lorsque le plan DJ est terminé...
+                                                                console.log("Dernières falaise");
+                                                                noInteraction();
+                                                                currentInteraction = "";
+                                                            }, 13599);
+                                                        }, 15520);
+                                                    }, 15280);
+                                                }, 15634);
+                                            }, 15596);
+                                        }, 1770);
+                                    }, 13480);
+                                }, 15440);
+                            }, 7920);
+                        }, 7730);
+                    }, 15389);
+                }, 5597);
+            }, 9844);
 
             /********************************************************************************************/
             /**************************************** ANIMATIONS ****************************************/
@@ -200,48 +306,50 @@ onload = function () {
                     TweenMax.to(scene1plan1nuagesarriere1, 2, { css: { transform: 'translateX(' + left / 60 + 'px) translateY(' + top / 60 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
                 });
 
-                TweenMax.to(scene1plan1fond1et2, 7, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
+                TweenMax.to(scene1plan1fond1et2, 9, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
 
                 mouseInteraction(currentInteraction);
             }
 
             /*** SCÈNE 1 - PLAN 2 - ANIMATION BONHOMME FALAISE ***/
             function fscene1plan2() {
+                var clearForce = false;
                 // Au survol pour le parallax...
                 container.addEventListener("mouseover", function(e) {
-                    /*var pos_x = e.pageX,
-                        pos_y = e.pageY,
-                        left  = 0,
-                        top   = 0;
+                    cpt += 6;
+                    var idTarget = e.target.id;
 
-                    left = cnv.width / 2 - pos_x;
-                    top  = cnv.height / 2 - pos_y;*/
+                    if (e.target.classList.contains("Scene1Plan2Nuages") && !clearForce) {
+                        switch(idTarget) {
+                            case "Scene1Plan2NuagesAvant3" :
+                                TweenMax.to(e.target, 1, { css: { transform: 'translate(' + cpt + 'px, ' + cpt + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                                break;
+                            case "Scene1Plan2NuagesAvant2" :
+                                TweenMax.to(e.target, 1, { css: { transform: 'translate(-' + cpt + 'px, -' + cpt + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                                break;
+                            case "Scene1Plan2NuagesAvant1" :
+                                TweenMax.to(e.target, 1, { css: { transform: 'translate(-' + cpt + 'px, ' + cpt + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                                break;
+                            case "Scene1Plan2NuagesArriere2" :
+                                TweenMax.to(e.target, 1, { css: { transform: 'translate(' + cpt + 'px, -' + cpt + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                                break;
+                            case "Scene1Plan2NuagesArriere1" :
+                                TweenMax.to(e.target, 1, { css: { transform: 'translateX(-' + cpt + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
+                        }
+                    }
 
-                    //TweenMax.to(scene1plan2nuagesavant, 1, { css: { transform: 'translateX(' + left / 10 + 'px) translateY(' + top / 10 + 'px)' }, ease: Power2.easeOut });
-                    //TweenMax.to(scene1plan2nuagesarriere, 1, { css: { transform: 'translateX(' + left / 20 + 'px) translateY(' + top / 20 + 'px)' }, ease: Power2.easeOut });
-                    
-                    //scene1plan2nuagesavant3.style.x += 40;
-                    
-                    console.log(e.target.x);
-                    
-                    /*TweenMax.to(scene1plan2nuagesavant3, 1, { x: "+=" + 40, y: "+=" + 40, ease: Linear.easeOut });
-                    TweenMax.to(scene1plan2nuagesavant2, 1, { x: "-=" + 60, y: "-=" + 60, ease: Linear.easeOut });
-                    TweenMax.to(scene1plan2nuagesavant1, 1, { x: "-=" + 60, y: "+=" + 100, ease: Linear.easeOut });
-
-                    TweenMax.to(scene1plan2nuagesarriere2, 1, { x: "+=" + 40, y: "-=" + 40, ease: Linear.easeOut });
-                    TweenMax.to(scene1plan2nuagesarriere1, 1, { x: "-= "+ 40, ease: Linear.easeOut });*/
-                    
                     mouseInteraction(currentInteraction);
                 });
 
-                /*setTimeout(function() {
-                    TweenMax.to(scene1plan2nuagesavant3, 4, { x: cnv.width+200, y: cnv.height+200, ease: Power4.easeIn });
-                    TweenMax.to(scene1plan2nuagesavant2, 4, { x: -400, y: -400, ease: Power4.easeIn });
-                    TweenMax.to(scene1plan2nuagesavant1, 4, { x: -800, y: cnv.height+100, ease: Power4.easeIn });
+                setTimeout(function() {
+                    clearForce = true;
+                    TweenMax.to(scene1plan2nuagesavant3, 1, { x: cnv.width+200, y: cnv.height+200, ease: Power4.easeIn, overwrite: 'all' });
+                    TweenMax.to(scene1plan2nuagesavant2, 1, { x: -400, y: -400, ease: Power4.easeIn, overwrite: 'all' });
+                    TweenMax.to(scene1plan2nuagesavant1, 1, { x: -800, y: cnv.height+100, ease: Power4.easeIn, overwrite: 'all' });
 
-                    TweenMax.to(scene1plan2nuagesarriere2, 4, { x: cnv.width, y: -100, ease: Power4.easeIn });
-                    TweenMax.to(scene1plan2nuagesarriere1, 4, { x: -700, ease: Power4.easeIn });
-                }, 3000);*/
+                    TweenMax.to(scene1plan2nuagesarriere2, 1, { x: cnv.width, y: -100, ease: Power4.easeIn, overwrite: 'all' });
+                    TweenMax.to(scene1plan2nuagesarriere1, 1, { x: -700, ease: Power4.easeIn, overwrite: 'all' });
+                }, 3500);
             }
 
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
@@ -252,6 +360,7 @@ onload = function () {
 
                 switch(typeInteraction) {
                     case 1 :
+                        combiHover();
                         combiClic(position);
                 }
             }
@@ -271,6 +380,17 @@ onload = function () {
                 playButton.style.visibility = "hidden";
             }});
 
+            // Disparition des titres
+            TweenMax.to(rakoonTitre, 1, {opacity: 0, onComplete: function() {
+                rakoonTitre.style.display = "none";
+                rakoonTitre.style.visibility = "hidden";
+            }});
+
+            TweenMax.to(trackTitre, 1, {opacity: 0, onComplete: function() {
+                trackTitre.style.display = "none";
+                trackTitre.style.visibility = "hidden";
+            }});
+
             // Dès que la souris sort de la zone vidéo...
             interactiveContainer.addEventListener("mouseleave", function(e) {   
                 noMouseInteraction();
@@ -280,20 +400,35 @@ onload = function () {
             interactiveContainer.addEventListener("mouseenter", function(e) {   
                 mouseInteraction(currentInteraction);
             });
+
+            // Disparition des overlays
+            TweenMax.to(overlayBottom, 0.7, {height: 50 + "px", lineHeight: 57 + "px", ease: Power4.easeIn });
+            TweenMax.to(overlayTop, 0.7, {height: 0, ease: Power4.easeIn, onComplete: function() {
+                document.querySelector("#overlayTop p").style.display = "none";
+            }});
+
+            TweenMax.from(document.querySelector("#overlayTop p"), 0.5, {opacity: 0, ease: Power4.easeIn });
         }
     }
 
     // Est appelée lorsqu'on arrive à un moment de la vidéo où il n'y a pas d'interaction
     function noInteraction() {
+        noScene();
+        noPlan();
+        noMouseInteraction();
+    }
+    
+    function noScene() {
         scenes.forEach(function(element) {
             element.parentNode.classList.remove("isActive");
         });
-
+    }
+    
+    function noPlan() {
         plans.forEach(function(element) {
             element.parentNode.classList.remove("isActive");
+            //element.classList.remove("isActive");
         });
-
-        noMouseInteraction();
     }
 
     function noMouseInteraction() {
@@ -347,7 +482,7 @@ onload = function () {
         // Au clic sur le container lorsque le combi est présent...
         container.addEventListener("click", function() {
             var tlCombiJump = new TimelineLite();
-            tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: position, ease: Back.easeIn});
+            tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: position, ease: Back.easeIn, overwrite: "none"});
         });
     }
 
@@ -406,6 +541,36 @@ onload = function () {
         mouse.style.top = e.pageY + "px";
         mouse.style.left = e.pageX + "px";
     };
+
+    iconFullscreen.addEventListener("click", Fullscreen);
+
+
+    /* View in fullscreen */
+    function Fullscreen() {
+        if (!fullscreen) {
+            fullscreen = true;
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+                document.documentElement.msRequestFullscreen();
+            }
+        } else {
+            fullscreen = false;
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { /* Firefox */
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE/Edge */
+                document.msExitFullscreen();
+            }
+        }
+    }
 };
 
 

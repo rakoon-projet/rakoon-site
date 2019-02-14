@@ -4,11 +4,13 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    color: #1B2945;
 }
 
 body {
     background-color: #1B2945;
     cursor: none;
+    font-family: "Impact", sans-serif;
 }
 
 svg {
@@ -37,7 +39,6 @@ svg {
     position: absolute;
     z-index: 9999;
     mix-blend-mode: normal;
-    font-family: "Impact", sans-serif;
     text-align: center;
     line-height: 100px;
     font-size: 30px;
@@ -46,12 +47,12 @@ svg {
 }
 
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */ /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+    supported by Chrome and Opera */
 }
 
 .differenceMode {
@@ -63,7 +64,155 @@ button:hover, a:hover {
 }
 
 
+/*** INTRO ***/
+
+#intro {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+}
+
+.casqueText {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#intro img {
+    margin-bottom: 30px;
+}
+
+#intro p {
+    font-family: "Lato", sans-serif;
+    color: #E9E6D3;
+    font-weight: 100;
+    text-transform: uppercase;
+    letter-spacing: 12px;
+    font-size: 12px;
+}
+
+.progress {
+    position: relative;
+    height: 2px;
+    display: block;
+    width: 100%;
+    background-color: white;
+    border-radius: 2px;
+    background-clip: padding-box;
+    /*margin: 0.5rem 0 1rem 0;*/
+    overflow: hidden;
+    top: 60%;
+}
+
+.progress .indeterminate {
+    background-color:black;
+}
+
+.progress .indeterminate:before {
+    content: '';
+    position: absolute;
+    background-color: #00cc7a;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    will-change: left, right;
+    -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.progress .indeterminate:after {
+    content: '';
+    position: absolute;
+    background-color: #00cc7a;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    will-change: left, right;
+    -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+    -webkit-animation-delay: 1.15s;
+    animation-delay: 1.15s;
+}
+
+@-webkit-keyframes indeterminate {
+    0% {
+        left: -35%;
+        right: 100%; }
+    60% {
+        left: 100%;
+        right: -90%; }
+    100% {
+        left: 100%;
+        right: -90%; } }
+@keyframes indeterminate {
+    0% {
+        left: -35%;
+        right: 100%; }
+    60% {
+        left: 100%;
+        right: -90%; }
+    100% {
+        left: 100%;
+        right: -90%; } }
+@-webkit-keyframes indeterminate-short {
+    0% {
+        left: -200%;
+        right: 100%; }
+    60% {
+        left: 107%;
+        right: -8%; }
+    100% {
+        left: 107%;
+        right: -8%; } }
+@keyframes indeterminate-short {
+    0% {
+        left: -200%;
+        right: 100%; }
+    60% {
+        left: 107%;
+        right: -8%; }
+    100% {
+        left: 107%;
+        right: -8%; }
+}
+
+
 /*** VIDÉO ***/
+
+#video-wrapper {
+    width: 100%;
+    height: 100%;
+/*    display: none;*/
+    opacity: 0;
+}
+
+.overlayIntro {
+    width: 100%;
+    height: 170px;
+    background-color: #fff;
+    position: absolute;
+    z-index: 99;
+    left: 0;
+}
+
+#overlayTop {
+    top: 0;
+    line-height: 170px;
+}
+
+#overlayBottom {
+    bottom: 0;
+    line-height: 280px;
+}
+
+#overlayTop p {
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 7px;
+    color: #1B2945;
+}
 
 #container {
     position: relative;
@@ -113,11 +262,11 @@ button:hover, a:hover {
 /* COMBI */
 
 /*#scene2 {
-    display: none;
+display: none;
 }*/
 
 /*#Combi {
-    display: none;
+display: none;
 }*/
 
 
@@ -128,12 +277,75 @@ button:hover, a:hover {
     position: absolute;
     z-index: 999;
     left: 50%;
-    top: 50%;
+    top: 67%;
     -webkit-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
     padding: 5% 10%;
     border-radius: 30px;
     font-size: 30px;
     letter-spacing: 20px;
+    color: #fff;
     font-weight: 100;
+    font-family: "Lato", sans-serif;
+    transition: all 1s ease-in-out;
 }
+
+#playButton:hover {
+    letter-spacing: 30px;
+}
+
+h2 {
+    position: absolute;
+    left: 50%;
+    top: 41%;
+    color: #fff;
+    z-index: 9999;
+    transform: translateX(-50%);
+    font-size: 150px;
+    letter-spacing: 22px;
+}
+
+h1 {
+    position: absolute;
+    left: 50%;
+    top: 33%;
+    color: #fff;
+    z-index: 9999;
+    transform: translateX(-50%);
+    font-size: 50px;
+    letter-spacing: 9px;
+}
+
+#social-networks {
+    margin-left: 30px;
+    display: inline-flex;
+}
+
+ul#social-networks, ul#others {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+#social-networks li {
+    margin-right: 35%;
+}
+
+#social-networks img {
+    width: 20px;
+}
+
+#others {
+    position: absolute;
+    right: 0;
+}
+
+#others img {
+    width: 65%;
+    padding-top: 7px;
+}
+
+#others li {
+    margin-left: 15%;
+}
+
+
