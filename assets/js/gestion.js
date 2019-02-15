@@ -39,7 +39,7 @@ onload = function () {
     var onplaying = false;
     var onpause = false;
 
-    var mediaSource = "assets/video/ours-1.mp4";
+    var mediaSource = "assets/video/ours-2.mp4";
     var videoContainer;
     var video = document.createElement("video");
 
@@ -163,9 +163,18 @@ Plan falaise : 02:32.799 = 152799
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
 
-            currentInteraction = "MOVE";
-
-            fscene1plan1(); // Joue le premier élément interactif
+            // A DECOMMENTER
+            //currentInteraction = "MOVE";
+            //fscene1plan1(); // Joue le premier élément interactif
+            
+            
+            
+            fscene5plan1();
+            currentInteraction = "zoom";
+            
+            
+            
+            
             playVid(); // Joue la vidéo "fixe"
 
             // Dessin de la vidéo à l'intérieur du canvas
@@ -218,11 +227,14 @@ Plan falaise : 02:32.799 = 152799
 
                             setTimeout(function() { // Lorsque le plan van neige est terminé...
                                 console.log("jungle");
-                                noInteraction();
+                                scene2.classList.remove("isActive");
                                 scene2plan1.classList.remove("isActive");
                                 currentInteraction = "";
+                                
+                                fscene5plan1();
 
                                 setTimeout(function() { // Lorsque le plan jungle est terminé...
+                                    mouse.style.backgroundColor = "#fff";
                                     console.log("van montagnes");
                                     noInteraction();
                                     currentInteraction = "";
@@ -364,7 +376,21 @@ Plan falaise : 02:32.799 = 152799
                         combiClic(position);
                 }
             }
-
+            
+            /*** SCÈNE 5 - PLAN 1 - ANIMATION DE LA LOUPE SUR LA JUNGLE ***/
+            function fscene5plan1() {
+                // Calcul du ratio entre la taille de la loupe et la vidéo
+                var cx = mouse.offsetWidth / video.width;
+                var cy = mouse.offsetHeight / video.height;
+                
+                // Réglage des propriétés du background pour la loupe
+                mouse.style.backgroundColor = "transparent";
+                mouse.style.border = "2px solid #fff";
+                mouse.style.backgroundImage = "url('" + mediaSource + "')";
+                mouse.style.backgroundSize = (video.width * cx) + "px " + (video.height * cy) + "px";
+                
+                mouseInteraction("zoom");
+            }
 
 
             /********************************************************************************************/
@@ -440,9 +466,17 @@ Plan falaise : 02:32.799 = 152799
     // Est appelée lorsqu'il y a une interaction
     function mouseInteraction(s) {
         mouse.classList.remove("differenceMode");
-        TweenMax.to(mouse, 0.2, {width: 100, height: 100, ease: Power1.easeOut});
+        
 
-        if (s != "") mouse.innerHTML = s;
+        if (s != "" && s != "zoom") {
+            mouse.innerHTML = s;
+            TweenMax.to(mouse, 0.2, {width: 100, height: 100, ease: Power1.easeOut});
+        }
+        
+        else if (s === "zoom") {
+            TweenMax.to(mouse, 0.2, {width: 200, height: 200, ease: Power1.easeOut});
+        }
+        
         else noMouseInteraction();
     }
 
