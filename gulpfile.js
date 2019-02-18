@@ -13,8 +13,12 @@ function minify() {
         .pipe(dest('dist'));
 }
 
-function video() {
+function videos() {
     return src('assets/video/*').pipe(dest('dist/assets/video'));
+}
+
+function images() {
+    return src('assets/img/*').pipe(dest('dist/assets/img'));
 }
 
 /*gulp.task('watch', function() {
@@ -23,6 +27,4 @@ function video() {
     livereload();
 })*/
 
-
-//exports.video = video;
-exports.default = series(minify, video);
+exports.default = series(minify, videos, images);
