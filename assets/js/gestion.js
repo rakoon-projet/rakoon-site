@@ -164,16 +164,8 @@ Plan falaise : 02:32.799 = 152799
             console.log(video.currentTime);
 
             // A DECOMMENTER
-            //currentInteraction = "MOVE";
-            //fscene1plan1(); // Joue le premier élément interactif
-            
-            
-            
-            fscene5plan1();
-            currentInteraction = "zoom";
-            
-            
-            
+            currentInteraction = "MOVE";
+            fscene1plan1(); // Joue le premier élément interactif
             
             playVid(); // Joue la vidéo "fixe"
 
@@ -229,10 +221,10 @@ Plan falaise : 02:32.799 = 152799
                                 console.log("jungle");
                                 scene2.classList.remove("isActive");
                                 scene2plan1.classList.remove("isActive");
-                                currentInteraction = "";
+                                currentInteraction = "zoom";
                                 
                                 fscene5plan1();
-
+        
                                 setTimeout(function() { // Lorsque le plan jungle est terminé...
                                     mouse.style.backgroundColor = "#fff";
                                     console.log("van montagnes");
