@@ -85,12 +85,14 @@ Plan falaise : 02:32.799 = 152799
 
     // Scènes
     var scene1 = document.getElementById("scene1"),
-        scene2 = document.getElementById("scene2");
+        scene2 = document.getElementById("scene2"),
+        scene10 = document.getElementById("scene10");
 
     // Plans
     var scene1plan1 = document.querySelector("#scene1 #plan1"), // Falaises
         scene1plan2 = document.querySelector("#scene1 #plan2"), // Bonhomme qui réfléchit
-        scene2plan1 = document.querySelector("#scene2 #plan1"); // Combi
+        scene2plan1 = document.querySelector("#scene2 #plan1"), // Combi
+        scene10plan1 = document.querySelector("#scene10 #plan1"); // Concert loin
 
     // Falaise
     var svgFalaise = document.getElementById("svg-falaise"),
@@ -107,6 +109,7 @@ Plan falaise : 02:32.799 = 152799
         scene1plan1nuagesavant4 = document.getElementById("Scene1Plan1NuagesAvant4"),
         scene1plan1nuagesavant5 = document.getElementById("Scene1Plan1NuagesAvant5"),
         scene1plan1nuagesavant6 = document.getElementById("Scene1Plan1NuagesAvant6");
+    var scene1ouscene11 = "scene1";
 
     // Visage
     var svgVisage = document.getElementById("svg-visage"),
@@ -124,6 +127,10 @@ Plan falaise : 02:32.799 = 152799
         carrosserie = document.querySelector('#Carrosserie'),
         roueArriere = document.getElementById("roueArriere"),
         roueAvant = document.getElementById("roueAvant");
+
+    // Concert
+    var spectators = document.querySelectorAll(".spectators"),
+        arraySpectators = new Array(spectators.length);
 
 
     // Éléments externes au container
@@ -163,10 +170,9 @@ Plan falaise : 02:32.799 = 152799
         if (videoContainer.ready === true) {
             console.log(video.currentTime);
 
-            // A DECOMMENTER
             currentInteraction = "MOVE";
-            fscene1plan1(); // Joue le premier élément interactif
-            
+            fscene1plan1_fscene11plan1(); // Joue le premier élément interactif
+
             playVid(); // Joue la vidéo "fixe"
 
             // Dessin de la vidéo à l'intérieur du canvas
@@ -185,6 +191,7 @@ Plan falaise : 02:32.799 = 152799
                 console.log("visage");
                 scene1plan1.classList.remove("isActive");
                 scene1plan2.classList.add("isActive");
+                scene1plan1nuagesavant5.style.display = "none"; // On supprime le nuage gênant
 
                 currentInteraction = "CLEAR";
 
@@ -204,6 +211,7 @@ Plan falaise : 02:32.799 = 152799
 
                     setTimeout(function() { // Lorsque le plan van ville est terminé...
                         console.log("chambre famille");
+                        //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
                         noInteraction();
                         scene2plan1.classList.remove("isActive");
                         currentInteraction = "";
@@ -219,20 +227,27 @@ Plan falaise : 02:32.799 = 152799
 
                             setTimeout(function() { // Lorsque le plan van neige est terminé...
                                 console.log("jungle");
+                                //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
                                 scene2.classList.remove("isActive");
                                 scene2plan1.classList.remove("isActive");
-                                currentInteraction = "zoom";
-                                
+                                currentInteraction = "";
+
                                 fscene5plan1();
-        
+
                                 setTimeout(function() { // Lorsque le plan jungle est terminé...
                                     mouse.style.backgroundColor = "#fff";
+                                    scene2.classList.add("isActive");
+                                    scene2plan1.classList.add("isActive");
                                     console.log("van montagnes");
-                                    noInteraction();
-                                    currentInteraction = "";
+                                    currentInteraction = "HOLD";
+
+                                    fsceneCombi(2, -10, 11.2);
 
                                     setTimeout(function() { // Lorsque le plan van montagnes est terminé...
                                         console.log("pilule");
+                                        //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
+                                        scene2.classList.remove("isActive");
+                                        scene2plan1.classList.remove("isActive");
                                         noInteraction();
                                         currentInteraction = "";
 
@@ -253,8 +268,12 @@ Plan falaise : 02:32.799 = 152799
 
                                                     setTimeout(function() { // Lorsque le plan van désert est terminé...
                                                         console.log("concert loin");
-                                                        noInteraction();
-                                                        currentInteraction = "";
+                                                        scene10.classList.add("isActive");
+                                                        scene10plan1.classList.add("isActive");
+                                                        //noInteraction();
+                                                        currentInteraction = "CLIC";
+
+                                                        fscene10plan1();
 
                                                         setTimeout(function() { // Lorsque le plan concert loin est terminé...
                                                             console.log("DJ");
@@ -263,8 +282,19 @@ Plan falaise : 02:32.799 = 152799
 
                                                             setTimeout(function() { // Lorsque le plan DJ est terminé...
                                                                 console.log("Dernières falaise");
-                                                                noInteraction();
-                                                                currentInteraction = "";
+                                                                scene1.classList.add("isActive");
+                                                                scene1plan1.classList.add("isActive");
+
+                                                                currentInteraction = "MOVE";
+                                                                scene1ouscene11 = "scene11";
+                                                                fscene1plan1_fscene11plan1();
+
+                                                                setTimeout(function() { // Lorsque la vidéo est terminée...
+                                                                    TweenMax.to(container, 1, {opacity: 0, ease: Linear.easeNone, onComplete: function() {
+                                                                        container.style.display = "none";
+                                                                        container.style.visibility = "hidden";
+                                                                    }});
+                                                                }, 3000);
                                                             }, 13599);
                                                         }, 15520);
                                                     }, 15280);
@@ -284,7 +314,7 @@ Plan falaise : 02:32.799 = 152799
             /********************************************************************************************/
 
             /*** SCÈNE 1 - PLAN 1 - ANIMATION DE LA FALAISE ***/
-            function fscene1plan1() {
+            function fscene1plan1_fscene11plan1() {
                 // Au survol pour le parallax...
                 container.addEventListener("mouseover", function(e) {
                     var pos_x = e.pageX,
@@ -310,7 +340,11 @@ Plan falaise : 02:32.799 = 152799
                     TweenMax.to(scene1plan1nuagesarriere1, 2, { css: { transform: 'translateX(' + left / 60 + 'px) translateY(' + top / 60 + 'px)' }, ease: Power2.easeOut, overwrite: 'none' });
                 });
 
-                TweenMax.to(scene1plan1fond1et2, 9, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
+                if (scene1ouscene11 === "scene1") TweenMax.to(scene1plan1fond1et2, 9, { css: { transform: 'scale(1.06)' }, ease: Linear.easeOut });
+                else {
+                    TweenMax.set(scene1plan1fond1et2, { css: { transform: 'scale(1.25)' }});
+                    TweenMax.to(scene1plan1fond1et2, 5.5, { css: { transform: 'scale(1)' }, ease: Linear.easeOut });
+                }
 
                 mouseInteraction(currentInteraction);
             }
@@ -359,29 +393,58 @@ Plan falaise : 02:32.799 = 152799
             /*** SCÈNE 2 - PLAN 1 - ANIMATION DU COMBI ***/
             function fsceneCombi(typeInteraction, position, vitesse) {
                 combiAnim(position, vitesse);
-                combiHover();
                 mouseInteraction(currentInteraction);
 
                 switch(typeInteraction) {
-                    case 1 :
+                    case 0:
                         combiHover();
-                        combiClic(position);
+                        break;
+                    case 1 :
+                        container.addEventListener("click", combiClic, true);
+                        break;
+                    case 2:
+                        combiHold();
+                        container.removeEventListener("click", combiClic, true);
                 }
             }
-            
+
             /*** SCÈNE 5 - PLAN 1 - ANIMATION DE LA LOUPE SUR LA JUNGLE ***/
             function fscene5plan1() {
                 // Calcul du ratio entre la taille de la loupe et la vidéo
                 var cx = mouse.offsetWidth / video.width;
                 var cy = mouse.offsetHeight / video.height;
-                
+
                 // Réglage des propriétés du background pour la loupe
                 mouse.style.backgroundColor = "transparent";
                 mouse.style.border = "2px solid #fff";
                 mouse.style.backgroundImage = "url('" + mediaSource + "')";
                 mouse.style.backgroundSize = (video.width * cx) + "px " + (video.height * cy) + "px";
-                
+
                 mouseInteraction("zoom");
+            }
+
+            /*** SCÈNE 10 - PLAN 1 - ANIMATION DU CONCERT DE LOIN ***/
+            function fscene10plan1() {
+                var tlRang1 = new TimelineMax({repeat: -1});
+                var tlRang2 = new TimelineMax({repeat: -1});
+                var tlRang3 = new TimelineMax({repeat: -1});
+
+                tlRang1.staggerTo("#Rang1 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=40"}, 0.001);
+                tlRang2.staggerTo("#Rang2 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=50"}, 0.002);
+                tlRang3.staggerTo("#Rang3 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=60"}, 0.003);
+
+                container.addEventListener("click", function() {
+                    var randomSpec = Math.round(Math.random() * 70);
+                    var randomNb = Math.round(Math.random() * 70);
+                    var tlJump = new TimelineMax({repeat: -1});
+
+                    for (var i=0; i<randomNb; i++) {
+                        if (!arraySpectators.includes(randomSpec)) {
+                            tlJump.to(spectators[randomSpec], 0.2, {y: "-=100px", repeat: 1, yoyo:true, ease: Linear.easeNone});
+                            arraySpectators.push(randomSpec);
+                        }
+                    }
+                });
             }
 
 
@@ -435,13 +498,13 @@ Plan falaise : 02:32.799 = 152799
         noPlan();
         noMouseInteraction();
     }
-    
+
     function noScene() {
         scenes.forEach(function(element) {
             element.parentNode.classList.remove("isActive");
         });
     }
-    
+
     function noPlan() {
         plans.forEach(function(element) {
             element.parentNode.classList.remove("isActive");
@@ -458,36 +521,48 @@ Plan falaise : 02:32.799 = 152799
     // Est appelée lorsqu'il y a une interaction
     function mouseInteraction(s) {
         mouse.classList.remove("differenceMode");
-        
+
 
         if (s != "" && s != "zoom") {
             mouse.innerHTML = s;
             TweenMax.to(mouse, 0.2, {width: 100, height: 100, ease: Power1.easeOut});
         }
-        
+
         else if (s === "zoom") {
             TweenMax.to(mouse, 0.2, {width: 200, height: 200, ease: Power1.easeOut});
         }
-        
+
         else noMouseInteraction();
     }
 
     function combiAnim(position, vitesse) {
-        // Animation du combi
-        var tlAvanceCombi = new TimelineLite();
-        tlAvanceCombi.set(combi, {x: -1500, y: position})
-            .to(combi, 2, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}) // Déplacement en x
-            .to(combi, vitesse, {x: 900, transformOrigin: "50% 50%", ease: Linear.easeNone}, "-=1")
-            .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn})
+
+        if (currentInteraction != "HOLD") {
+            // Animation du combi
+            var tlAvanceCombi = new TimelineLite();
+            tlAvanceCombi.set(combi, {x: -1500, y: position, overwrite: "all"})
+                .to(combi, 2, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}) // Déplacement en x
+                .to(combi, vitesse, {x: 900, transformOrigin: "50% 50%", ease: Linear.easeNone}, "-=1")
+                .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn});
+
+
+        } else {
+            var tlAvanceCombi = new TimelineLite();
+            tlAvanceCombi.set(combi, {x: -1500, y: position, overwrite: "all"})
+                .to(combi, 1, {x: -500, transformOrigin: "50% 50%", ease: Power4.easeOut}); // Déplacement en x
+        }
+
         TweenMax.to(roueArriere, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
         TweenMax.to(roueAvant, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
 
-        var randomRebondCombi = Math.random() * (30-10) + 10;
+        //var randomRebondCombi = Math.random() * (30-10) + 10;
         var tlRebondCombi = new TimelineMax({repeat: -1});
 
-        tlRebondCombi.to(carrosserie, 0.2, {y: "+=" + randomRebondCombi + "px", ease: Linear.easeNone})
-            .to(carrosserie, 0.2, {y: "-=" + randomRebondCombi + "10px", ease: Linear.easeNone});
+        //tlRebondCombi.to(carrosserie, 0.2, {y: "+=" + randomRebondCombi + "px", ease: Linear.easeNone})
+        //.to(carrosserie, 0.2, {y: "-=" + randomRebondCombi + "10px", ease: Linear.easeNone});
 
+        tlRebondCombi.to(carrosserie, 0.2, {y: "+=20px", ease: Linear.easeNone})
+            .to(carrosserie, 0.2, {y: "-=20px", ease: Linear.easeNone});
     }
 
     function combiHover() {
@@ -506,10 +581,41 @@ Plan falaise : 02:32.799 = 152799
 
     function combiClic(position) {
         // Au clic sur le container lorsque le combi est présent...
-        container.addEventListener("click", function() {
-            var tlCombiJump = new TimelineLite();
-            tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: position, ease: Back.easeIn, overwrite: "none"});
+        //container.addEventListener("click", function() {
+        var tlCombiJump = new TimelineLite();
+        tlCombiJump.to(combi, 0.1, {y: -300, ease: Power1.easeOut}).to(combi, 0.2,  {y: 5.5, ease: Back.easeIn, overwrite: "none"});
+        //});
+    }
+
+    function combiHold() {
+        // Au hold sur le container lorsque le combi est présent...
+
+        var holdFini = false;
+        container.addEventListener("mousedown", function() {
+            if (!holdFini) {
+                console.log("hold");
+                console.log("holdFini = " + holdFini);
+                TweenMax.to(combi, 1.5, {x: cnv.width-600, ease: Power3.easeOut, overwrite: "none"});
+                TweenMax.to(roueArriere, 0.2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone, overwrite: "none"});
+                TweenMax.to(roueAvant, 0.2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone, overwrite: "none"});
+            }
         });
+
+        container.addEventListener("mouseup", function() {
+            if (!holdFini) {
+                console.log("lache");
+                TweenMax.to(combi, 1.5, {x: -500, ease: Power3.easeOut, overwrite: "none"});
+                TweenMax.to(roueArriere, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
+                TweenMax.to(roueAvant, 2, {rotation: 360, transformOrigin: "50% 50%", repeat: -1, ease: Linear.easeNone});
+            }
+        });
+
+        setTimeout(function() {
+            holdFini = true;
+            var tl = new TimelineMax();
+            tl.to(combi, 1, {x: 900, transformOrigin: "50% 50%", ease: Power3.easeOut, overwrite: "all"})
+                .to(combi, 1, {x: 1400, transformOrigin: "50% 50%", ease: Power4.easeIn, overwrite: "all"});
+        }, 11000);
     }
 
 
