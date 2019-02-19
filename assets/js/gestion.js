@@ -126,7 +126,13 @@ Plan falaise : 02:32.799 = 152799
     var combi = document.querySelector('#Combi'),
         carrosserie = document.querySelector('#Carrosserie'),
         roueArriere = document.getElementById("roueArriere"),
-        roueAvant = document.getElementById("roueAvant");
+        roueAvant = document.getElementById("roueAvant"),
+        //panneaux = document.getElementById("Panneaux"),
+        panneaux = document.querySelectorAll("#Panneaux > g"),
+        neige = document.querySelectorAll("#Neige > g"),
+        arbres = document.querySelector("#Arbres g"),
+        cactus = document.querySelectorAll("#Cactus > g");
+        
 
     // Concert
     var spectators = document.querySelectorAll(".spectators"),
@@ -204,6 +210,7 @@ Plan falaise : 02:32.799 = 152799
 
                     scene2.classList.add("isActive");
                     scene2plan1.classList.add("isActive");
+                    document.getElementById("Panneaux").classList.add("isActive");
 
                     currentInteraction = "HOVER";
 
@@ -214,12 +221,14 @@ Plan falaise : 02:32.799 = 152799
                         //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
                         noInteraction();
                         scene2plan1.classList.remove("isActive");
+                        document.getElementById("Panneaux").classList.remove("isActive");
                         currentInteraction = "";
 
                         setTimeout(function() { // Lorsque le plan chambre famille est terminé...
                             console.log("van neige");
                             scene2.classList.add("isActive");
                             scene2plan1.classList.add("isActive");
+                            document.getElementById("Neige").classList.add("isActive");
 
                             currentInteraction = "CLIC";
 
@@ -230,6 +239,7 @@ Plan falaise : 02:32.799 = 152799
                                 //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
                                 scene2.classList.remove("isActive");
                                 scene2plan1.classList.remove("isActive");
+                                document.getElementById("Neige").classList.remove("isActive");
                                 currentInteraction = "";
 
                                 fscene5plan1();
@@ -238,6 +248,7 @@ Plan falaise : 02:32.799 = 152799
                                     mouse.style.backgroundColor = "#fff";
                                     scene2.classList.add("isActive");
                                     scene2plan1.classList.add("isActive");
+                                    document.getElementById("Arbres").classList.add("isActive");
                                     console.log("van montagnes");
                                     currentInteraction = "HOLD";
 
@@ -248,6 +259,7 @@ Plan falaise : 02:32.799 = 152799
                                         //TweenMax.set(carrosserie, {y: "+=20px"}); // Remise en place de la carrosserie
                                         scene2.classList.remove("isActive");
                                         scene2plan1.classList.remove("isActive");
+                                        document.getElementById("Arbres").classList.remove("isActive");
                                         noInteraction();
                                         currentInteraction = "";
 
@@ -263,11 +275,18 @@ Plan falaise : 02:32.799 = 152799
 
                                                 setTimeout(function() { // Lorsque le plan plage est terminé...
                                                     console.log("van désert");
-                                                    noInteraction();
-                                                    currentInteraction = "";
+                                                    scene2.classList.add("isActive");
+                                                    scene2plan1.classList.add("isActive");
+                                                    document.getElementById("Cactus").classList.add("isActive");
+                                                    currentInteraction = "HOLD";
+                                                    
+                                                    fsceneCombi(3, 150, 15);
 
                                                     setTimeout(function() { // Lorsque le plan van désert est terminé...
                                                         console.log("concert loin");
+                                                        scene2.classList.remove("isActive");
+                                                        scene2plan1.classList.remove("isActive");
+                                                        document.getElementById("Cactus").classList.remove("isActive");
                                                         scene10.classList.add("isActive");
                                                         scene10plan1.classList.add("isActive");
                                                         //noInteraction();
@@ -398,13 +417,20 @@ Plan falaise : 02:32.799 = 152799
                 switch(typeInteraction) {
                     case 0:
                         combiHover();
+                        TweenMax.to(panneaux, 10.8, {x: -14582, ease: Linear.easeNone});
                         break;
                     case 1 :
                         container.addEventListener("click", combiClic, true);
+                        TweenMax.to(neige, 9, {x: -13222.8, ease: Linear.easeNone});
                         break;
                     case 2:
                         combiHold();
                         container.removeEventListener("click", combiClic, true);
+                        TweenMax.to(arbres, 16.2, {x: -13227.9, ease: Linear.easeNone});
+                        break;
+                    case 3:
+                        container.addEventListener("click", combiClic, true);
+                        TweenMax.to(cactus, 11, {x: -14887, ease: Linear.easeNone});
                 }
             }
 
@@ -429,9 +455,9 @@ Plan falaise : 02:32.799 = 152799
                 var tlRang2 = new TimelineMax({repeat: -1});
                 var tlRang3 = new TimelineMax({repeat: -1});
 
-                tlRang1.staggerTo("#Rang1 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=40"}, 0.001);
-                tlRang2.staggerTo("#Rang2 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=50"}, 0.002);
-                tlRang3.staggerTo("#Rang3 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=60"}, 0.003);
+                tlRang1.staggerTo("#Rang1 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=20"}, 0.001);
+                tlRang2.staggerTo("#Rang2 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=30"}, 0.002);
+                tlRang3.staggerTo("#Rang3 .spectators", 0.2, {repeat:1, yoyo: true, y: "-=40"}, 0.003);
 
                 container.addEventListener("click", function() {
                     var randomSpec = Math.round(Math.random() * 70);
@@ -561,8 +587,10 @@ Plan falaise : 02:32.799 = 152799
         //tlRebondCombi.to(carrosserie, 0.2, {y: "+=" + randomRebondCombi + "px", ease: Linear.easeNone})
         //.to(carrosserie, 0.2, {y: "-=" + randomRebondCombi + "10px", ease: Linear.easeNone});
 
-        tlRebondCombi.to(carrosserie, 0.2, {y: "+=20px", ease: Linear.easeNone})
-            .to(carrosserie, 0.2, {y: "-=20px", ease: Linear.easeNone});
+        //tlRebondCombi.to(carrosserie, 0.2, {y: "+=20px", ease: Linear.easeNone})
+            //.to(carrosserie, 0.2, {y: "-=20px", ease: Linear.easeNone});
+        
+        tlRebondCombi.to(carrosserie, 0.2, {y: "+=20px", repeat:1, yoyo:true, ease: Linear.easeNone});
     }
 
     function combiHover() {
